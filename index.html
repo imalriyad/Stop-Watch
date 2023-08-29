@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop watch</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.6.3/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+ <div class="card mx-auto w-96 text-center bg-base-100 shadow-xl">
+    <h1 class="text-4xl font-bold pt-10">Stop Watch</h1>
+  <div class="card-body">
+    <h2 class="text-5xl text-center mb-10"><span id="hours">00</span><span class="text-lg">hour</span> <span id="minutes">00</span><span class="text-lg">Min</span> <span id="displayTime">00</span><span class="text-lg">Sec</span></h2>
+   
+    <div class="card-actions justify-center ">
+      <button id="startbtn" class="btn btn-info text-white normal-case font-semibold">Start</button>
+      <button id="pauseBtn" class="btn btn-success text-white normal-case font-semibold">Pause</button>
+      <button id="resetBtn" class="btn btn-error text-white normal-case font-semibold">Reset</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Scipts -->
+<script>
+let displayvalue = document.getElementById('displayTime')
+let minutes = document.getElementById('minutes')
+let hoursValue = document.getElementById('hours')
+
+let intervalId;
+let isPaused = true
+let initialValue = 0
+let current = 0
+let hours= 0
+//  Start button
+document.getElementById('startbtn').addEventListener('click',function(){
+  if (isPaused) {
+    isPaused = false
+    intervalId = setInterval(() => {
+     const second = displayvalue.innerText = ++initialValue<10? '0'+ initialValue:initialValue
+     if (second>59) {
+      const minuteString = minutes.innerText
+      const minuteint= parseInt(minuteString)
+      const min = minuteint+1
+      minutes.innerText = min<10?'0'+min:min
+      initialValue = 0
+     }
+    
+    //  Hour section
+    if (minutes.innerText>59) {
+      const hourValueString = hoursValue.innerText 
+      const hourInt = parseInt(hourValueString)
+      const hour = hourInt+1
+      hoursValue.innerText = hour<10?'0'+hour:hour
+      minutes = 0
+    }
+     
+     
+      document.getElementById('startbtn').setAttribute('disabled',true)
+    }, 1000);
+  }
+  
+})
+
+// Pause Button
+document.getElementById('pauseBtn').addEventListener('click',function(){
+
+  if(!isPaused){
+    clearInterval(intervalId)
+    isPaused = true
+    document.getElementById('pauseBtn').innerText = 'Resume'
+  }
+  else{
+    isPaused = false
+    intervalId = setInterval(() => {
+      displayvalue.innerText = ++initialValue<10? '0'+ initialValue:initialValue
+      if (displayvalue.innerText>59) {
+      const minuteString = minutes.innerText
+      const minuteint= parseInt(minuteString)
+      const min = minuteint+1
+      minutes.innerText = min<10?'0'+min:min
+      initialValue = 0
+     }
+    }, 1000);
+    document.getElementById('pauseBtn').innerText = 'Pause'
+  }
+ 
+})
+
+// Reset Button
+document.getElementById('resetBtn').addEventListener('click',function(){
+  clearInterval(intervalId)
+  initialValue = 0
+  displayvalue.innerText = '00'
+  minutes.innerText = '00'
+  hoursValue.innerText = '00'
+  isPaused = true
+  document.getElementById('startbtn').removeAttribute('disabled')
+})
+
+
+</script>
+</body>
+</html>
